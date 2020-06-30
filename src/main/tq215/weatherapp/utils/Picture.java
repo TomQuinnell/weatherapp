@@ -1,6 +1,7 @@
 package main.tq215.weatherapp.utils;
 
 public enum Picture {
+    LOADING("LoadIcon.png"),
     COLD("Cold.png"),
     WARM("Warm.png"),
     RAIN("Rain.png"),

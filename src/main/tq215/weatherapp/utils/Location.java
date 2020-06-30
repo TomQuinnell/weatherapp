@@ -1,43 +1,78 @@
 package main.tq215.weatherapp.utils;
 
+import java.util.List;
+
 public class Location {
     private String name;
-    private String id;
-    private Forecast forecast;
+    private double lat;
+    private double lon;
+    private ForecastAtTime currentForecast;
+    private ForecastComposite twelveHour;
+    private ForecastComposite sevenDay;
 
-    public Location(String name, String id, Forecast forecast) {
+    public Location(String name, double lat, double lon) {
+        // no forecast found/needed
         this.name = name;
-        this.id = id;
-        this.forecast = forecast; // forecast found
-    }
-
-    public Location(String name, String id) {
-        this.name = name;
-        this.id = id;
-        this.forecast = null; // no forecast found/needed
+        this.lat = lat;
+        this.lon = lon;
+        this.currentForecast = new ForecastAtTime();
+        this.twelveHour = new ForecastComposite(12);
+        this.sevenDay = new ForecastComposite(7);
     }
 
     public String getName() {
         return name;
     }
 
-    public String getId() {
-        return id;
+    public double getLat() { return lat; }
+
+    public double getLon() { return lon; }
+
+    public ForecastAtTime getCurrentForecast() {
+        return currentForecast;
     }
 
-    public Forecast getForecast() {
-        return forecast;
+    public ForecastComposite getTwelveHour() {
+        return twelveHour;
+    }
+
+    public ForecastComposite getSevenDay() {
+        return sevenDay;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    public void setForecast(Forecast forecast) {
-        this.forecast = forecast;
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public void setCurrentForecast(ForecastAtTime currentForecast) {
+        this.currentForecast = currentForecast;
+    }
+
+    public void setTwelveHour(ForecastComposite twelveHour) {
+        this.twelveHour = twelveHour;
+    }
+
+    public void setSevenDay(ForecastComposite sevenDay) {
+        this.sevenDay = sevenDay;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "name='" + name + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", currentForecast=" + currentForecast +
+                ", twelveHour=" + twelveHour +
+                ", sevenDay=" + sevenDay +
+                '}';
     }
 }
