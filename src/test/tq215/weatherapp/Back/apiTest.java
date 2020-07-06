@@ -128,4 +128,13 @@ public class apiTest {
         List<Location> top5 = Backend.getTopKSearches("franklin", 20);
         System.out.println(top5);
     }
+
+    @Test
+    public void apiKeysLoad() {
+        String weatherApiKey = Backend.weatherapiKey;
+        System.out.println(weatherApiKey);
+
+        String openWeatherKey = Backend.openweatherKey;
+        System.out.println(openWeatherKey);
+    }
 }

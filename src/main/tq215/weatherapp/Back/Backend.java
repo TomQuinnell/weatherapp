@@ -8,6 +8,10 @@ import org.json.JSONArray;
 
 import main.tq215.weatherapp.utils.Location;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -21,15 +25,37 @@ import java.util.concurrent.CompletableFuture;
 import java.time.LocalDateTime;
 
 public class Backend {
-    private static final String weatherapiKey = "";
+    public static String weatherapiKey = null;
+    static {
+        try {
+            weatherapiKey = loadKey("./Resources/ApiKeys/weatherapikey.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private static final String weatherapiURL = "http://api.weatherapi.com/v1/";
     private static final DateTimeFormatter weatherapiDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
-    private static final String openweatherKey = "";
+    public static String openweatherKey = null;
+    static {
+        try {
+            openweatherKey = loadKey("./Resources/ApiKeys/openweatherkey.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private static final String openweatherURL = "https://api.openweathermap.org/data/2.5/";
 
     private static final Random randomGenerator = new Random();
+
+    private static String loadKey(String filePath) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String key = reader.readLine();
+        reader.close();
+
+        return key;
+    }
 
     private static CompletableFuture<String> getAsync(String uri) {
         // function to create a CompletableFuture for request and return the response
@@ -189,7 +215,8 @@ public class Backend {
 
     public static List<Location> getTopKSearches(String query, int k) {
         // TODO ensure query has clean, non-API-code-injected, String
-        // TODO ensure query not empty, if so return []
+        //  and ensure query not empty, if so return []
+        //  do both of these on the front-end on text entry
 
         // send off query to API
         // http://api.weatherapi.com/v1/search.json?key=<YOUR_API_KEY>&q=lond

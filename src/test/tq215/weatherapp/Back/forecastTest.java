@@ -16,4 +16,6 @@ public class forecastTest {
         Location l = new Location("TestPlace", 0.0,0.0);
         System.out.println(l.getCurrentForecast());
     }
+
+
 }

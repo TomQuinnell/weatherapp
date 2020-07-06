@@ -6,6 +6,7 @@ public class Location {
     private String name;
     private double lat;
     private double lon;
+    private String latlon;
     private ForecastAtTime currentForecast;
     private ForecastComposite twelveHour;
     private ForecastComposite sevenDay;
@@ -18,6 +19,7 @@ public class Location {
         this.currentForecast = new ForecastAtTime();
         this.twelveHour = new ForecastComposite(12);
         this.sevenDay = new ForecastComposite(7);
+        this.latlon = lat + "_" + lon;
     }
 
     public String getName() {
@@ -27,6 +29,8 @@ public class Location {
     public double getLat() { return lat; }
 
     public double getLon() { return lon; }
+
+    public String getLatlon() { return latlon;}
 
     public ForecastAtTime getCurrentForecast() {
         return currentForecast;
@@ -52,6 +56,10 @@ public class Location {
         this.lon = lon;
     }
 
+    public void setLatLon(String latlon) {
+        this.latlon = latlon;
+    }
+
     public void setCurrentForecast(ForecastAtTime currentForecast) {
         this.currentForecast = currentForecast;
     }
@@ -70,9 +78,9 @@ public class Location {
                 "name='" + name + '\'' +
                 ", lat=" + lat +
                 ", lon=" + lon +
-                ", currentForecast=" + currentForecast +
-                ", twelveHour=" + twelveHour +
-                ", sevenDay=" + sevenDay +
+                //", currentForecast=" + currentForecast +
+                //", twelveHour=" + twelveHour +
+                //", sevenDay=" + sevenDay +
                 '}';
     }
 }
