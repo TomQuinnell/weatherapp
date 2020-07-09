@@ -75,7 +75,7 @@ public class Backend {
         return LocalDateTime.ofEpochSecond(dt, 0, ZoneOffset.ofTotalSeconds(timezone_offset));
     }
 
-    private static ForecastAtTime forecast_FromLiveJSON(JSONObject liveData, int timezone_offset) {
+    private static ForecastAtTime forecast_FromLiveJSON(JSONObject liveData, int timezone_offset, boolean isSmallPic) {
         // double temp, double cloudCoverage, double rain, double humidity, double windSpeed
         double newTemp = (double) (Math.round(100.0 * (liveData.getDouble("temp") - 273.0)) / 100); // temp in Kelvin
         double newCloudCov = liveData.getDouble("clouds");
@@ -92,7 +92,7 @@ public class Backend {
         // create LocalDateTime object from dt
         LocalDateTime forecastTime = dtToLDT(dt, timezone_offset);
 
-        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime);
+        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime, isSmallPic);
     }
 
     private static ForecastAtTime forecast_FromDayJSON(JSONObject dayData, int timezone_offset) {
@@ -112,7 +112,7 @@ public class Backend {
         // create LocalDateTime object from dt
         LocalDateTime forecastTime = dtToLDT(dt, timezone_offset);
 
-        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime);
+        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime, false);
     }
 
     public static void getSnapshot(Location location) {
@@ -120,7 +120,7 @@ public class Backend {
         ForecastAtTime forecast = location.getCurrentForecast();
         if (forecast.notInitialised() || forecast.isOld()) {
             // first set location's forecast to LOADING
-            location.setCurrentForecast(new ForecastAtTime());
+            location.setCurrentForecast(new ForecastAtTime(false));
 
             // send off query to API
             // https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
@@ -140,7 +140,7 @@ public class Backend {
             JSONObject current = jsonData.getJSONObject("current");
 
             // create new forecast and attach it to location
-            ForecastAtTime updatedForecast = forecast_FromLiveJSON(current, timezone_offset);
+            ForecastAtTime updatedForecast = forecast_FromLiveJSON(current, timezone_offset, false);
             location.setCurrentForecast(updatedForecast);
         }
     }
@@ -171,7 +171,7 @@ public class Backend {
                 // get ith hour
                 JSONObject current = hourly.getJSONObject(i);
 
-                ForecastAtTime forecastAtHour = forecast_FromLiveJSON(current, timezone_offset);
+                ForecastAtTime forecastAtHour = forecast_FromLiveJSON(current, timezone_offset, true);
                 newTwelve.add(forecastAtHour);
             }
             ForecastComposite newTwelveHour = new ForecastComposite(newTwelve);

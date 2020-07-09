@@ -11,8 +11,9 @@ public class ForecastAtTime extends Forecast {
     private double humidity; // percentage of humidity
     private double windSpeed; // in mph
     private LocalDateTime timeOfForecast; // time object of when forecast is
+    private boolean isSmallPic; // whether pic is small or big
 
-    public ForecastAtTime(double temp, double cloudCoverage, double rain, double humidity, double windSpeed, LocalDateTime timeOfForecast) {
+    public ForecastAtTime(double temp, double cloudCoverage, double rain, double humidity, double windSpeed, LocalDateTime timeOfForecast, boolean isSmallPic) {
         // contructor of all weather attributes, no timeOfQuery so default to now()
         super(LocalDateTime.now());
         this.temp = temp;
@@ -20,14 +21,19 @@ public class ForecastAtTime extends Forecast {
         this.rain = rain;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
+        this.isSmallPic = isSmallPic;
         updatePic();
         this.timeOfForecast = timeOfForecast;
     }
 
-    public ForecastAtTime() {
+    public ForecastAtTime(boolean isSmallPic) {
         // null on start up
         super();
-        setPicture(Picture.LOADING);
+        if (isSmallPic) {
+            setPicture(Picture.LOADINGSMALL);
+        } else {
+            setPicture(Picture.LOADING);
+        }
     }
 
     private void updatePic() {
@@ -43,41 +49,46 @@ public class ForecastAtTime extends Forecast {
 
         Picture picToUpdateTo;
 
-        if (!isWarm) {
-            // not warm, not cloudy, not rainy
-            if (!isCloudy && !isRainy) {
-                picToUpdateTo = Picture.COLD;
-            }
-            // not warm, not cloudy, rainy
-            else if (!isCloudy) {
-                picToUpdateTo = Picture.RAIN;
-            }
-            // not warm, cloudy, not rainy
-            else if (!isRainy) {
-                picToUpdateTo = Picture.CLOUD;
-            }
-            // not warm, cloudy, rainy
-            else {
-                picToUpdateTo = Picture.RAINCLOUD;
-            }
+        if (isRainy) {
+            if (isWarm) {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.SUNRAINCLOUDSMALL;
+                } else {
+                    picToUpdateTo = Picture.SUNRAINCLOUD;
+                }
+            } else {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.RAINSMALL;
+                } else {
+                    picToUpdateTo = Picture.RAIN;
+                }            }
         } else {
-            // warm, not cloudy, not rainy
-            if (!isCloudy && !isRainy) {
-                picToUpdateTo = Picture.WARM;
-            }
-            // warm, not cloudy, rainy
-            else if (!isCloudy) {
-                picToUpdateTo = Picture.RAIN;
-            }
-            // warm, cloudy, not rainy
-            else if (!isRainy) {
-                picToUpdateTo = Picture.SUNCLOUD;
-            }
-            // warm, cloudy, rainy
-            else {
-                picToUpdateTo = Picture.SUNRAINCLOUD;
-            }
+            if (!isWarm && !isCloudy) {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.COLDSMALL;
+                } else {
+                    picToUpdateTo = Picture.COLD;
+                }
+            } else if (!isWarm) {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.CLOUDSMALL;
+                } else {
+                    picToUpdateTo = Picture.CLOUD;
+                }
+            } else if (!isCloudy) {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.WARMSMALL;
+                } else {
+                    picToUpdateTo = Picture.WARM;
+                }
+            } else {
+                if (isSmallPic) {
+                    picToUpdateTo = Picture.SUNCLOUDSMALL;
+                } else {
+                    picToUpdateTo = Picture.SUNCLOUD;
+                }            }
         }
+
         setPicture(picToUpdateTo);
     }
 
@@ -105,11 +116,11 @@ public class ForecastAtTime extends Forecast {
         this.cloudCoverage = cloudCoverage;
     }
 
-    public double getrain() {
+    public double getRain() {
         return rain;
     }
 
-    public void setrain(double rain) {
+    public void setRain(double rain) {
         this.rain = rain;
     }
 

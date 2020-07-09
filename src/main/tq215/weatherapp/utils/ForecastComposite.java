@@ -13,7 +13,7 @@ public class ForecastComposite extends Forecast {
         // zip lists of forecast attributes
         this.forecasts = new ArrayList<>();
         for (int i = 0; i < temp.size(); i++) {
-            this.forecasts.add(new ForecastAtTime(temp.get(i), cloudCoverage.get(i), rain.get(i), humidity.get(i), windSpeed.get(i), timeOfForecast.get(i)));
+            this.forecasts.add(new ForecastAtTime(temp.get(i), cloudCoverage.get(i), rain.get(i), humidity.get(i), windSpeed.get(i), timeOfForecast.get(i), true));
         }
     }
 
@@ -22,13 +22,17 @@ public class ForecastComposite extends Forecast {
         super(); // we only need the timeOfQuery here for isFresh() in Super.
         this.forecasts = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.forecasts.add(new ForecastAtTime());
+            this.forecasts.add(new ForecastAtTime(true));
         }
     }
 
     public ForecastComposite(List<ForecastAtTime> forecasts) {
         super(LocalDateTime.now());
         this.forecasts = forecasts;
+    }
+
+    public ForecastAtTime getIthForecast(int i) {
+        return forecasts.get(i);
     }
 
     public List<ForecastAtTime> getForecasts() {

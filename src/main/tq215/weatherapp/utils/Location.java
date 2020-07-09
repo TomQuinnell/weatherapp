@@ -16,7 +16,7 @@ public class Location {
         this.name = name;
         this.lat = lat;
         this.lon = lon;
-        this.currentForecast = new ForecastAtTime();
+        this.currentForecast = new ForecastAtTime(false);
         this.twelveHour = new ForecastComposite(12);
         this.sevenDay = new ForecastComposite(7);
         this.latlon = lat + "_" + lon;
