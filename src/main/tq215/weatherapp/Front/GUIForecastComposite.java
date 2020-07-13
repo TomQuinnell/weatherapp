@@ -6,4 +6,6 @@ import javax.swing.*;
 
 public abstract class GUIForecastComposite extends JPanel {
     public abstract void update(Location newLocation);
+    public abstract void update();
+
 }

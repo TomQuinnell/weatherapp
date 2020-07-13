@@ -28,8 +28,9 @@ public class ForecastRow extends JPanel {
         LocalDateTime timeOfForecast = forecast.getTimeOfForecast();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        this.isHour = isHour;
         if (timeOfForecast == null) {
-            time = makeTextPane("Loading...");
+            time = makeTextPane("Loading...\n");
         } else {
             if (isHour) {
                 time = makeTextPane(timeOfForecast.getHour() + ":00");
@@ -46,23 +47,23 @@ public class ForecastRow extends JPanel {
         add(icon, gbc);
 
         gbc.gridx = 2;
-        temp = makeTextPane("Temp: ");
+        temp = makeTextPane("Temp:    ");
         add(temp, gbc);
 
         gbc.gridx = 3;
-        cloudCoverage = makeTextPane("Clouds: ");
+        cloudCoverage = makeTextPane("Clouds:    ");
         add(cloudCoverage, gbc);
 
         gbc.gridx = 4;
-        rain = makeTextPane("Rain: ");
+        rain = makeTextPane("Rain:    ");
         add(rain, gbc);
 
         gbc.gridx = 5;
-        humidity = makeTextPane("Humidity: ");
+        humidity = makeTextPane("Humidity:    ");
         add(humidity, gbc);
 
         gbc.gridx = 6;
-        windSpeed = makeTextPane("Wind Speed: ");
+        windSpeed = makeTextPane("Wind Speed:    ");
         add(windSpeed, gbc);
     }
 
@@ -72,9 +73,9 @@ public class ForecastRow extends JPanel {
         // time
         LocalDateTime timeOfForecast = newForecast.getTimeOfForecast();
         if (isHour) {
-            time = makeTextPane(timeOfForecast.getHour() + ":00");
+            time.setText(timeOfForecast.getHour() + ":00");
         } else {
-            time = makeTextPane(timeOfForecast.getDayOfWeek() + " " + timeOfForecast.getDayOfMonth() + "th");
+            time.setText(timeOfForecast.getDayOfWeek() + " " + timeOfForecast.getDayOfMonth() + "th");
         }
 
         // icon

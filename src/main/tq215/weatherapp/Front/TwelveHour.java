@@ -6,6 +6,7 @@ import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
@@ -41,8 +42,10 @@ public class TwelveHour extends GUIForecastComposite {
         // forecasts
         gbc.ipadx = 2;
         gbc.ipady = 2;
+        forecasts = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             ForecastRow currentForecast = new ForecastRow(twelveHour.getIthForecast(i), true);
+            forecasts.add(currentForecast);
             gbc.gridx = 0;
             gbc.gridy = i + 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -52,10 +55,16 @@ public class TwelveHour extends GUIForecastComposite {
 
     @Override
     public void update(Location newLocation) {
-        // update forecast info from new seven day from location
+        // update forecast info from new twelve hour from location
         this.location = newLocation;
+        update();
+    }
+
+    @Override
+    public void update() {
+        // update forecast info from new twelve hour
         ForecastComposite newTwelveHour = location.getTwelveHour();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 12; i++) {
             ForecastAtTime newForecast = newTwelveHour.getIthForecast(i);
             forecasts.get(i).update(newForecast);
         }

@@ -80,7 +80,7 @@ public class Backend {
         double newTemp = (double) (Math.round(100.0 * (liveData.getDouble("temp") - 273.0)) / 100); // temp in Kelvin
         double newCloudCov = liveData.getDouble("clouds");
         double newRain;
-        if (liveData.has("rain")) {
+        if (liveData.has("rain") && liveData.getJSONObject("rain").has("1h")) {
             newRain = liveData.getJSONObject("rain").getDouble("1h");
         } else {
             newRain = 0.0;
@@ -126,12 +126,12 @@ public class Backend {
             // https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
             //exclude=hourly,daily&appid={YOUR API KEY}
             String apiQuery = openweatherURL + "onecall?lat=" + location.getLat() + "&lon=" + location.getLon() + "&exclude=minutely,hourly,daily" + "&appid=" + openweatherKey;
-            System.out.println("Sending call for snapshot for " + location.getName());
+            //System.out.println("Sending call for snapshot for " + location.getName());
 
             CompletableFuture<String> httpCall = getAsync(apiQuery);
             String apiResult = httpCall.join();
 
-            System.out.println(apiResult);
+            //System.out.println(apiResult);
 
 
             // turn to JSONObject and parse out the relevant weather stats
@@ -156,11 +156,11 @@ public class Backend {
             // https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
             //exclude=hourly,daily&appid={YOUR API KEY}
             String apiQuery = openweatherURL + "onecall?lat=" + location.getLat() + "&lon=" + location.getLon() + "&exclude=current,minutely,daily" + "&appid=" + openweatherKey;
-            System.out.println("Sending call for snapshot for " + location.getName());
+            //System.out.println("Sending call for snapshot for " + location.getName());
 
             CompletableFuture<String> httpCall = getAsync(apiQuery);
             String apiResult = httpCall.join();
-            System.out.println(apiResult);
+            //System.out.println(apiResult);
 
             // turn to JSONObject and parse out the relevant weather stats
             List<ForecastAtTime> newTwelve = new ArrayList<>();
@@ -190,11 +190,11 @@ public class Backend {
             // https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
             //exclude=hourly,daily&appid={YOUR API KEY}
             String apiQuery = openweatherURL + "onecall?lat=" + location.getLat() + "&lon=" + location.getLon() + "&exclude=current,minutely,hourly" + "&appid=" + openweatherKey;
-            System.out.println("Sending call for snapshot for " + location.getName());
+            //System.out.println("Sending call for snapshot for " + location.getName());
 
             CompletableFuture<String> httpCall = getAsync(apiQuery);
             String apiResult = httpCall.join();
-            System.out.println(apiResult);
+            //System.out.println(apiResult);
 
             // turn to JSONObject and parse out the relevant weather stats
             List<ForecastAtTime> newSeven = new ArrayList<>();
@@ -225,7 +225,7 @@ public class Backend {
 
         CompletableFuture<String> httpCall = getAsync(apiQuery);
         String apiResult = httpCall.join();
-        System.out.println(apiResult);
+        //System.out.println(apiResult);
 
         List<Location> topk = new ArrayList<>();
 
@@ -241,9 +241,5 @@ public class Backend {
         }
 
         return topk;
-    }
-
-    public static void updateRecents(List<Location> recents, Location newLocation) {
-        int a = 0;
     }
 }

@@ -54,7 +54,13 @@ public class SevenDay extends GUIForecastComposite {
     public void update(Location newLocation) {
         // update forecast info from new seven day from location
         this.location = newLocation;
-        ForecastComposite newSevenDay = location.getSevenDay();
+        update();
+    }
+
+    @Override
+    public void update() {
+        // update forecast info from new seven day from location
+        ForecastComposite newSevenDay = this.location.getSevenDay();
         for (int i = 0; i < 7; i++) {
             ForecastAtTime newForecast = newSevenDay.getIthForecast(i);
             forecasts.get(i).update(newForecast);

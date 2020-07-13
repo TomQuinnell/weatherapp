@@ -73,9 +73,13 @@ public class BigSnapshot extends JPanel {
         add(wind, gbc);
     }
 
-    public void updateState(Location location) {
-        ForecastAtTime snapshot = location.getCurrentForecast();
+    public void update(Location location) {
         this.location = location;
+        update();
+    }
+
+    public void update() {
+        ForecastAtTime snapshot = this.location.getCurrentForecast();
         nameBadge.setText(this.location.getName());
         this.weatherImg.setIcon(new ImageIcon(snapshot.getPicture().getIcon()));
         this.temp.setText("Temp: " + snapshot.getTemp());

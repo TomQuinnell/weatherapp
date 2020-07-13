@@ -20,8 +20,8 @@ public class BigForecast extends JPanel {
 
         setLayout(new GridBagLayout());
         this.setBackground(Color.GRAY);
-        gbc.weightx = 1;
-        gbc.weighty = 1;
+        //gbc.weightx = 1;
+        //gbc.weighty = 1;
 
         // back button
         gbc.gridx = 0;
@@ -51,7 +51,16 @@ public class BigForecast extends JPanel {
     public void update(Location location) {
         this.location = location;
 
-        snapshot.updateState(location);
+        snapshot.update(location);
+        composite.update(location);
+    }
+
+    public void update() {
+        snapshot.update();
+        composite.update();
+    }
+
+    public void switchComposite(Location location) {
         remove(composite);
         gbc.gridx = 0;
         gbc.gridy = 2;

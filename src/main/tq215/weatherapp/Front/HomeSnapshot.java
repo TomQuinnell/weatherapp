@@ -48,27 +48,27 @@ public class HomeSnapshot extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridheight = 1;
 
-        temp = makeTextPane("Temp: ");
+        temp = makeTextPane("Temp:     ");
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(temp, gbc);
 
-        cloud = makeTextPane("Clouds: ");
+        cloud = makeTextPane("Clouds:     ");
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(cloud, gbc);
 
-        rain = makeTextPane("Rain: ");
+        rain = makeTextPane("Rain:     ");
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(rain, gbc);
 
-        humidity = makeTextPane("Humidity: ");
+        humidity = makeTextPane("Humidity:     ");
         gbc.gridx = 1;
         gbc.gridy = 4;
         add(humidity, gbc);
 
-        wind = makeTextPane("Wind Speed: ");
+        wind = makeTextPane("Wind Speed:     ");
         gbc.gridx = 1;
         gbc.gridy = 5;
         add(wind, gbc);
@@ -81,9 +81,13 @@ public class HomeSnapshot extends JPanel {
         add(expandButton, gbc);
     }
 
-    public void updateState(Location location) {
-        ForecastAtTime snapshot = location.getCurrentForecast();
+    public void update(Location location) {
         this.location = location;
+        update();
+    }
+
+    public void update() {
+        ForecastAtTime snapshot = location.getCurrentForecast();
         this.nameBadge.setText(this.location.getName());
         this.weatherImg.setIcon(new ImageIcon(snapshot.getPicture().getIcon()));
         this.temp.setText("Temp: " + snapshot.getTemp());

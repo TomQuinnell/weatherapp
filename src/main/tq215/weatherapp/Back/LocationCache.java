@@ -9,7 +9,7 @@ import java.util.Vector;
 public class LocationCache {
     private HashMap<String, Location> cache; // latlon string to Location object
     private Vector<Location> recents; // vector of recents, with most recent at left, oldest at right
-    private static final int CAPACITY = 5;
+    private static final int CAPACITY = 10;
 
     public LocationCache() {
         this.cache = new HashMap<>();
@@ -86,6 +86,11 @@ public class LocationCache {
 
             return newLocation;
         }
+    }
+
+    public List<Location> getTopK(int k) {
+        k = Math.min(k, CAPACITY);
+        return this.recents.subList(0, k);
     }
 
     public HashMap<String, Location> getCache() {

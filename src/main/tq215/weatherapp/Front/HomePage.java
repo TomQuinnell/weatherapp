@@ -68,14 +68,19 @@ public class HomePage extends JPanel {
         add(searchBar, gbc);
     }
 
-    public void updateState(List<Location> recents, Location userLocation) {
+    public void update(List<Location> recents, Location userLocation) {
         this.recents = recents;
         this.userLocation = userLocation;
 
-        mainLocation.updateState(userLocation);
-        subLocation1.updateState(recents.get(0));
-        subLocation2.updateState(recents.get(1));
-        subLocation3.updateState(recents.get(2));
-        subLocation4.updateState(recents.get(3));
+        update();
+    }
+
+    public void update() {
+        mainLocation.update(userLocation);
+        subLocation1.update(recents.get(0));
+        subLocation2.update(recents.get(1));
+        subLocation3.update(recents.get(2));
+        subLocation4.update(recents.get(3));
+
     }
 }
