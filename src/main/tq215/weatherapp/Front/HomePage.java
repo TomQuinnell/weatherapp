@@ -4,6 +4,7 @@ import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class HomePage extends JPanel {
@@ -77,10 +78,40 @@ public class HomePage extends JPanel {
 
     public void update() {
         mainLocation.update(userLocation);
-        subLocation1.update(recents.get(0));
+        subLocation1.update(recents.get(0)); // TODO make sure updates in Main/to recents are async so no java.util.ConcurrentModificationException raised here
         subLocation2.update(recents.get(1));
         subLocation3.update(recents.get(2));
         subLocation4.update(recents.get(3));
+        revalidate();
+        repaint();
+    }
 
+    public Location getMainLocation() {
+        return mainLocation.getLoc();
+    }
+
+    public Location getSub1Location() {
+        return subLocation1.getLoc();
+    }
+
+    public Location getSub2Location() {
+        return subLocation2.getLoc();
+    }
+
+    public Location getSub3Location() {
+        return subLocation3.getLoc();
+    }
+
+    public Location getSub4Location() {
+        return subLocation4.getLoc();
+    }
+
+    public void addListeners(ActionListener mainListener, ActionListener sub1Listener, ActionListener sub2Listener,
+                             ActionListener sub3Listener, ActionListener sub4Listener) {
+        mainLocation.addListener(mainListener);
+        subLocation1.addListener(sub1Listener);
+        subLocation2.addListener(sub2Listener);
+        subLocation3.addListener(sub3Listener);
+        subLocation4.addListener(sub4Listener);
     }
 }

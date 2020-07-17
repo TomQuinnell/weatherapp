@@ -6,6 +6,7 @@ import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,5 +69,11 @@ public class TwelveHour extends GUIForecastComposite {
             ForecastAtTime newForecast = newTwelveHour.getIthForecast(i);
             forecasts.get(i).update(newForecast);
         }
+        revalidate();
+        repaint();
+    }
+
+    public void addListener(ActionListener listener) {
+        switchButton.addActionListener(listener);
     }
 }

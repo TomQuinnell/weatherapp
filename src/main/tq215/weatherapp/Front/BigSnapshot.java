@@ -9,7 +9,7 @@ import java.awt.*;
 
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
-public class BigSnapshot extends JPanel {
+public class BigSnapshot extends JPanel implements Updateable {
     private Location location;
 
     private JTextPane nameBadge;
@@ -47,27 +47,27 @@ public class BigSnapshot extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridheight = 1;
 
-        temp = makeTextPane("Temp: ");
+        temp = makeTextPane("Temp:      ");
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(temp, gbc);
 
-        cloud = makeTextPane("Clouds: ");
+        cloud = makeTextPane("Clouds:      ");
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(cloud, gbc);
 
-        rain = makeTextPane("Rain: ");
+        rain = makeTextPane("Rain:      ");
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(rain, gbc);
 
-        humidity = makeTextPane("Humidity: ");
+        humidity = makeTextPane("Humidity:      ");
         gbc.gridx = 1;
         gbc.gridy = 4;
         add(humidity, gbc);
 
-        wind = makeTextPane("Wind Speed: ");
+        wind = makeTextPane("Wind Speed:      ");
         gbc.gridx = 1;
         gbc.gridy = 5;
         add(wind, gbc);
@@ -87,5 +87,7 @@ public class BigSnapshot extends JPanel {
         this.rain.setText("Rain: " + snapshot.getRain());
         this.humidity.setText("Humidity: " + snapshot.getHumidity());
         this.wind.setText("Wind: " + snapshot.getWindSpeed());
+        revalidate();
+        repaint();
     }
 }

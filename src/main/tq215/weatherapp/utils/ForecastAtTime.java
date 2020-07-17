@@ -37,6 +37,7 @@ public class ForecastAtTime extends Forecast {
     }
 
     private void updatePic() {
+        // TODO make pictures at night not sunny
         // update picture based on weather of forecast
         double WARMLEVEL = 15.0;
         boolean isWarm = this.temp > WARMLEVEL;

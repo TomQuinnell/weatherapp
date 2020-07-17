@@ -47,23 +47,23 @@ public class ForecastRow extends JPanel {
         add(icon, gbc);
 
         gbc.gridx = 2;
-        temp = makeTextPane("Temp:    ");
+        temp = makeTextPane("Temp:      ");
         add(temp, gbc);
 
         gbc.gridx = 3;
-        cloudCoverage = makeTextPane("Clouds:    ");
+        cloudCoverage = makeTextPane("Clouds:      ");
         add(cloudCoverage, gbc);
 
         gbc.gridx = 4;
-        rain = makeTextPane("Rain:    ");
+        rain = makeTextPane("Rain:      ");
         add(rain, gbc);
 
         gbc.gridx = 5;
-        humidity = makeTextPane("Humidity:    ");
+        humidity = makeTextPane("Humidity:      ");
         add(humidity, gbc);
 
         gbc.gridx = 6;
-        windSpeed = makeTextPane("Wind Speed:    ");
+        windSpeed = makeTextPane("Wind Speed:      ");
         add(windSpeed, gbc);
     }
 
@@ -88,5 +88,7 @@ public class ForecastRow extends JPanel {
         rain.setText("Rain: " + newForecast.getRain());
         humidity.setText("Humidity: " + newForecast.getHumidity());
         windSpeed.setText("Wind Speed: " + newForecast.getWindSpeed());
+        revalidate();
+        repaint();
     }
 }

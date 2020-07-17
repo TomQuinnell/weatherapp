@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 public class Forecast {
     private LocalDateTime timeOfQuery; // time object of when query sent
 
-    private final static  int maxMinsBeforeNew = 5; // mins before new query needed
+    private final static  int maxMinsBeforeNew = 1; // mins before new query needed
 
     public Forecast(LocalDateTime timeOfQuery) {
         // null on start up

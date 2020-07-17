@@ -44,9 +44,10 @@ public class BigForecastTest {
         double lat = 51.52;
         double lon = -0.11;
         Location london = new Location("London", lat, lon);
+        Backend.getSnapshot(london);
         Backend.get12Hour(london);
-        System.out.println(london);
         pane.update(london);
+        System.out.println(london);
     }
 
 

@@ -6,6 +6,8 @@ import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
@@ -41,8 +43,10 @@ public class SevenDay extends GUIForecastComposite {
         // forecasts
         gbc.ipadx = 2;
         gbc.ipady = 2;
+        forecasts = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             ForecastRow currentForecast = new ForecastRow(sevenDay.getIthForecast(i), false);
+            forecasts.add(currentForecast);
             gbc.gridx = 0;
             gbc.gridy = i + 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -65,5 +69,12 @@ public class SevenDay extends GUIForecastComposite {
             ForecastAtTime newForecast = newSevenDay.getIthForecast(i);
             forecasts.get(i).update(newForecast);
         }
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void addListener(ActionListener listener) {
+        switchButton.addActionListener(listener);
     }
 }

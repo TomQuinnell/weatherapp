@@ -1,12 +1,16 @@
 package main.tq215.weatherapp.Front;
 
+import main.tq215.weatherapp.Back.Backend;
 import main.tq215.weatherapp.utils.ForecastComposite;
 import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
-public class BigForecast extends JPanel {
+public class BigForecast extends JPanel implements Updateable {
     private JButton backButton;
     private BigSnapshot snapshot;
     private GUIForecastComposite composite;
@@ -45,7 +49,56 @@ public class BigForecast extends JPanel {
         gbc.gridy = 2;
         isTwelveHour = true;
         composite = new TwelveHour(this.location);
+        composite.addListener(make12HAL());
         add(composite, gbc);
+    }
+
+    public ActionListener make12HAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+
+                GUIForecastComposite newComposite = new SevenDay(location);
+                newComposite.addListener(make7DAL());
+
+                remove(composite);
+                composite = newComposite;
+                add(composite, gbc);
+                revalidate();
+                repaint();
+
+                Backend.get7Day(location);
+                composite.update();
+                revalidate();
+                repaint();
+            }
+        };
+    }
+
+    public ActionListener make7DAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+
+                GUIForecastComposite newComposite = new TwelveHour(location);
+                newComposite.addListener(make12HAL());
+
+                remove(composite);
+                composite = newComposite;
+                add(composite, gbc);
+                revalidate();
+                repaint();
+
+                Backend.get12Hour(location); // TODO make this (and 12HAL call) async
+                composite.update();
+                revalidate();
+                repaint();
+            }
+        };
     }
 
     public void update(Location location) {
@@ -53,24 +106,18 @@ public class BigForecast extends JPanel {
 
         snapshot.update(location);
         composite.update(location);
+        revalidate();
+        repaint();
     }
 
     public void update() {
         snapshot.update();
         composite.update();
+        revalidate();
+        repaint();
     }
 
-    public void switchComposite(Location location) {
-        remove(composite);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        isTwelveHour = !isTwelveHour;
-        if (isTwelveHour) {
-            composite = new TwelveHour(location);
-        } else {
-            composite = new SevenDay(location);
-        }
-
-        add(composite, gbc);
+    public void setBackAL(ActionListener listener) {
+        this.backButton.addActionListener(listener);
     }
 }

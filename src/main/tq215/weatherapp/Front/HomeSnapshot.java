@@ -6,10 +6,15 @@ import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
-public class HomeSnapshot extends JPanel {
+public class HomeSnapshot extends JPanel implements Updateable {
+    public Location getLoc() {
+        return location;
+    }
+
     private Location location;
 
     private JTextPane nameBadge;
@@ -48,27 +53,27 @@ public class HomeSnapshot extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridheight = 1;
 
-        temp = makeTextPane("Temp:     ");
+        temp = makeTextPane("Temp:      ");
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(temp, gbc);
 
-        cloud = makeTextPane("Clouds:     ");
+        cloud = makeTextPane("Clouds:      ");
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(cloud, gbc);
 
-        rain = makeTextPane("Rain:     ");
+        rain = makeTextPane("Rain:      ");
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(rain, gbc);
 
-        humidity = makeTextPane("Humidity:     ");
+        humidity = makeTextPane("Humidity:      ");
         gbc.gridx = 1;
         gbc.gridy = 4;
         add(humidity, gbc);
 
-        wind = makeTextPane("Wind Speed:     ");
+        wind = makeTextPane("Wind Speed:      ");
         gbc.gridx = 1;
         gbc.gridy = 5;
         add(wind, gbc);
@@ -95,5 +100,11 @@ public class HomeSnapshot extends JPanel {
         this.rain.setText("Rain: " + snapshot.getRain());
         this.humidity.setText("Humidity: " + snapshot.getHumidity());
         this.wind.setText("Wind: " + snapshot.getWindSpeed());
+        revalidate();
+        repaint();
+    }
+
+    public void addListener(ActionListener listener) {
+        this.expandButton.addActionListener(listener);
     }
 }

@@ -78,9 +78,12 @@ public class Location {
                 "name='" + name + '\'' +
                 ", lat=" + lat +
                 ", lon=" + lon +
-                //", currentForecast=" + currentForecast +
-                //", twelveHour=" + twelveHour +
-                //", sevenDay=" + sevenDay +
+                ", currentForecast=" + currentForecast.notInitialised() +
+                ", twelveHour=" + twelveHour.notInitialised() +
+                ", sevenDay=" + sevenDay.notInitialised() +
+//                ", currentForecast=" + currentForecast +
+//                ", twelveHour=" + twelveHour +
+//                ", sevenDay=" + sevenDay +
                 '}';
     }
 }

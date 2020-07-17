@@ -1,5 +1,6 @@
 package main.tq215.weatherapp.Back;
 
+import main.tq215.weatherapp.Front.Updateable;
 import main.tq215.weatherapp.utils.Forecast;
 import main.tq215.weatherapp.utils.ForecastAtTime;
 import main.tq215.weatherapp.utils.ForecastComposite;
@@ -112,7 +113,7 @@ public class Backend {
         // create LocalDateTime object from dt
         LocalDateTime forecastTime = dtToLDT(dt, timezone_offset);
 
-        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime, false);
+        return new ForecastAtTime(newTemp, newCloudCov, newRain, newHumidity, newWindSpeed, forecastTime, true);
     }
 
     public static void getSnapshot(Location location) {
@@ -148,6 +149,7 @@ public class Backend {
     public static void get12Hour(Location location) {
         // first check for forecast existence and freshness if exists
         ForecastComposite forecast = location.getTwelveHour();
+
         if (forecast.notInitialised() || forecast.isOld() || forecast.isDifferentHour()) {
             // first set location's forecast to LOADING
             location.setTwelveHour(new ForecastComposite(12));
@@ -182,6 +184,7 @@ public class Backend {
     public static void get7Day(Location location) {
         // first check for forecast existence and freshness if exists
         ForecastComposite forecast = location.getSevenDay();
+
         if (forecast.notInitialised() || forecast.isOld() || forecast.isDifferentDay()) {
             // first set location's forecast to LOADING
             location.setSevenDay(new ForecastComposite(7));
