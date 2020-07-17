@@ -105,6 +105,9 @@ public class HomeSnapshot extends JPanel implements Updateable {
     }
 
     public void addListener(ActionListener listener) {
+        for (ActionListener l: this.expandButton.getActionListeners()) {
+            this.expandButton.removeActionListener(l);
+        }
         this.expandButton.addActionListener(listener);
     }
 }

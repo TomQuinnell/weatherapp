@@ -16,7 +16,7 @@ public class LocationCache {
         this.recents = new Vector<>();
     }
 
-    private void cons(Location l, boolean inRecents, boolean toHead) {
+    private synchronized void cons(Location l, boolean inRecents, boolean toHead) {
         // add to head or end
         if (toHead) {
             recents.insertElementAt(l, 0);
@@ -41,7 +41,7 @@ public class LocationCache {
         }
     }
 
-    public void add(String latlon, String locName) {
+    public synchronized void add(String latlon, String locName) {
         // first check cache
         if (cache.containsKey(latlon)) {
             // must also be in recents
@@ -64,7 +64,7 @@ public class LocationCache {
         }
     }
 
-    public Location findLocation(String latlon, String locName, boolean addToHead) {
+    public synchronized Location findLocation(String latlon, String locName, boolean addToHead) {
         // first check cache
         if (cache.containsKey(latlon)) {
             // get Location from cache and reshuffle recents if asked to
@@ -88,7 +88,7 @@ public class LocationCache {
         }
     }
 
-    public List<Location> getTopK(int k) {
+    public synchronized List<Location> getTopK(int k) {
         k = Math.min(k, CAPACITY);
         return this.recents.subList(0, k);
     }

@@ -26,8 +26,8 @@ public class HomePage extends JPanel {
         this.setBackground(Color.RED);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        gbc.weightx = 1;
-        gbc.weighty = 1;
+        //gbc.weightx = 1;
+        //gbc.weighty = 1;
         gbc.insets = new Insets(2, 2, 2, 2);
 
         // main location

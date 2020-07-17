@@ -118,6 +118,16 @@ public class BigForecast extends JPanel implements Updateable {
     }
 
     public void setBackAL(ActionListener listener) {
+        for (ActionListener l: this.backButton.getActionListeners()) {
+            this.backButton.removeActionListener(l);
+        }
         this.backButton.addActionListener(listener);
+    }
+
+    public void resetComposite() {
+        remove(composite);
+        this.composite = new TwelveHour(this.location);
+        this.composite.addListener(make12HAL());
+        add(composite, gbc);
     }
 }

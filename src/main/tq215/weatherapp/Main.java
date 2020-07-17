@@ -13,10 +13,12 @@ import java.util.List;
 
 public class Main {
     private static HomePage homePage;
-    private static JFrame homePageFrame;
+    //private static JFrame homePageFrame;
     private static BigForecast bigForecast;
-    private static JFrame bigForecastFrame;
+    //private static JFrame bigForecastFrame;
     private static LocationCache locationCache;
+
+    private JFrame masterFrame;
 
     private static final List<Location> defaultRecents = List.of(new Location("Paris", 48.87, 2.33),
                                                                 new Location("Rome", 41.9, 12.48),
@@ -24,6 +26,14 @@ public class Main {
                                                                 new Location("Edinburgh", 55.95, -3.16),
                                                                 new Location("Barcelona", 41.38, 2.18));
     private static final Location userLocation = new Location("London", 51.52,-0.12);
+
+    private void setMasterFrameContent(JPanel panel) {
+        this.masterFrame.getContentPane().removeAll();
+        this.masterFrame.getContentPane().repaint();
+        this.masterFrame.add(panel);
+        this.masterFrame.pack();
+        this.masterFrame.setVisible(true);
+    }
 
     public Main() {
         // create location cache, initially filled with a few defaults
@@ -36,21 +46,18 @@ public class Main {
             }
         }
 
-        // set up homepage frame
-        homePageFrame = new JFrame("Weather App");
-        homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        homePage = new HomePage(locationCache.getTopK(4), getUserLocation());
-        homePageFrame.add(homePage);
-        homePageFrame.pack();
-        homePageFrame.setVisible(true);
+        // set up Master Frame
+        masterFrame = new JFrame("Weather App");
+        masterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // set up bigSnapshot frame
-        bigForecastFrame = new JFrame("Weather App");
-        bigForecastFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // set up homepage Panel
+        homePage = new HomePage(locationCache.getTopK(4), getUserLocation());
+
+        // set up bigSnapshot Panel
         bigForecast = new BigForecast(new Location("User shouldn't see this (I hope)", 1000000000.0, 1000000000.0));
-        bigForecastFrame.add(bigForecast);
-        bigForecastFrame.pack();
-        bigForecastFrame.setVisible(false);
+
+        // display the home page
         displayHomePage();
     }
 
@@ -72,10 +79,14 @@ public class Main {
     }
 
     private ActionListener makeBigForecastAL(Location l) {
+        // make ActionListener for BigForecast's back button
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                locationCache.add(l.getLatlon(), l.getName());
+                if (l != getUserLocation()) {
+                    locationCache.add(l.getLatlon(), l.getName());
+                }
+                bigForecast.resetComposite();
                 displayHomePage();
             }
         };
@@ -83,8 +94,7 @@ public class Main {
 
     public void displayHomePage() {
         // make sure homePage visible
-        bigForecastFrame.setVisible(false);
-        homePageFrame.setVisible(true);
+        setMasterFrameContent(homePage);
 
         // get snapshot for user location and recents
         Backend.getSnapshot(getUserLocation());
@@ -94,15 +104,20 @@ public class Main {
         }
 
         // update JPane
-        homePage.update();
+        homePage.update(recents, getUserLocation());
         homePage.addListeners(makeHomePageAL(getUserLocation()), makeHomePageAL(recents.get(0)),
                 makeHomePageAL(recents.get(1)), makeHomePageAL(recents.get(2)), makeHomePageAL(recents.get(3)));
+        homePage.revalidate();
+        homePage.repaint();
+
+        // repaint Master Frame
+        this.masterFrame.revalidate();
+        this.masterFrame.repaint();
     }
 
     public void displayFullPage(Location location) {
         // make sure bigForecast visible
-        homePageFrame.setVisible(false);
-        bigForecastFrame.setVisible(true);
+        setMasterFrameContent(bigForecast);
 
         // get snapshot and 12 hour for location
         Backend.getSnapshot(location);
@@ -111,5 +126,11 @@ public class Main {
         // update JPane
         bigForecast.update(location);
         bigForecast.setBackAL(makeBigForecastAL(location));
+        bigForecast.revalidate();
+        bigForecast.repaint();
+
+        // repaint Master Frame
+        this.masterFrame.revalidate();
+        this.masterFrame.repaint();
     }
 }
