@@ -1,6 +1,5 @@
 package main.tq215.weatherapp.Front;
 
-import main.tq215.weatherapp.utils.Forecast;
 import main.tq215.weatherapp.utils.ForecastAtTime;
 import main.tq215.weatherapp.utils.Location;
 
@@ -11,12 +10,10 @@ import java.awt.event.ActionListener;
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
 public class HomeSnapshot extends JPanel implements Updateable {
-    public Location getLoc() {
-        return location;
-    }
+    // a HomeSnapshot holds the weather info for a ForecastAtTime, with an Expand button to open a BigForecast at that Location
 
+    // components
     private Location location;
-
     private JTextPane nameBadge;
     private JLabel weatherImg;
     private JTextPane temp;
@@ -80,18 +77,19 @@ public class HomeSnapshot extends JPanel implements Updateable {
 
         // button to expand to full forecast
         expandButton = new JButton("+");
-        // TODO add a listener or something so expand into big view onClick()
         gbc.gridx = 2;
         gbc.gridy = 0;
         add(expandButton, gbc);
     }
 
     public void update(Location location) {
+        // update from new Location
         this.location = location;
         update();
     }
 
     public void update() {
+        // update Forecast info
         ForecastAtTime snapshot = location.getCurrentForecast();
         this.nameBadge.setText(this.location.getName());
         this.weatherImg.setIcon(new ImageIcon(snapshot.getPicture().getIcon()));
@@ -105,9 +103,14 @@ public class HomeSnapshot extends JPanel implements Updateable {
     }
 
     public void addListener(ActionListener listener) {
+        // add listener to Expand Button
         for (ActionListener l: this.expandButton.getActionListeners()) {
             this.expandButton.removeActionListener(l);
         }
         this.expandButton.addActionListener(listener);
+    }
+
+    public Location getLoc() {
+        return location;
     }
 }

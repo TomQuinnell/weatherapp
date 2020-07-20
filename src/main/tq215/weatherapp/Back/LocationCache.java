@@ -1,7 +1,6 @@
 package main.tq215.weatherapp.Back;
 
 import main.tq215.weatherapp.utils.Location;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -9,14 +8,17 @@ import java.util.Vector;
 public class LocationCache {
     private HashMap<String, Location> cache; // latlon string to Location object
     private Vector<Location> recents; // vector of recents, with most recent at left, oldest at right
-    private static final int CAPACITY = 10;
+    private static final int CAPACITY = 50; // capacity of recents
 
     public LocationCache() {
+        // empty constructor, initialise empty cache and recents
         this.cache = new HashMap<>();
         this.recents = new Vector<>();
     }
 
     private synchronized void cons(Location l, boolean inRecents, boolean toHead) {
+        // add new Location l, depending if inRecents,to head or end (depending on toHead)
+
         // add to head or end
         if (toHead) {
             recents.insertElementAt(l, 0);
@@ -34,7 +36,6 @@ public class LocationCache {
         // chop down to size if needed
         if (recents.size() > CAPACITY) {
             for (int i = CAPACITY; i < recents.size(); i++) {
-                String newLatLon = recents.get(i).getLatlon();
                 cache.remove(recents.get(i).getLatlon());
             }
             recents.setSize(CAPACITY);
@@ -42,6 +43,8 @@ public class LocationCache {
     }
 
     public synchronized void add(String latlon, String locName) {
+        // add new location at latlon, called locName
+
         // first check cache
         if (cache.containsKey(latlon)) {
             // must also be in recents
@@ -65,6 +68,8 @@ public class LocationCache {
     }
 
     public synchronized Location findLocation(String latlon, String locName, boolean addToHead) {
+        // find location at latlon, called locName, creating a new Location if not already in cache
+
         // first check cache
         if (cache.containsKey(latlon)) {
             // get Location from cache and reshuffle recents if asked to
@@ -89,6 +94,7 @@ public class LocationCache {
     }
 
     public synchronized List<Location> getTopK(int k) {
+        // get first k elements
         k = Math.min(k, CAPACITY);
         return this.recents.subList(0, k);
     }
@@ -109,6 +115,7 @@ public class LocationCache {
     public void setRecents(Vector<Location> recents) {
         this.recents = recents;
     }
+
 
     public static int getCAPACITY() {
         return CAPACITY;

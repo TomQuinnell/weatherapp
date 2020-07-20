@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
 public class ForecastRow extends JPanel {
+    // a ForecastRow displays a ForecastAtTime in a ForecastComposite
+
+    // components
     private JTextPane time;
     private JLabel icon;
     private JTextPane temp;
@@ -17,7 +20,7 @@ public class ForecastRow extends JPanel {
     private JTextPane humidity;
     private JTextPane windSpeed;
 
-    private boolean isHour;
+    private boolean isHour; // hour or day?
 
     public ForecastRow(ForecastAtTime forecast, boolean isHour) {
         setLayout(new GridBagLayout());

@@ -1,5 +1,6 @@
 package tq215.weatherapp.Back;
 
+import main.tq215.weatherapp.Back.LocationCache;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -130,11 +131,22 @@ public class apiTest {
     }
 
     @Test
-    public void apiKeysLoad() {
-        String weatherApiKey = Backend.weatherapiKey;
-        System.out.println(weatherApiKey);
+    public void cleanQuery_noSpace() {
+        String s = "!£$%^ihope&*this()works";
+        String goal = "ihopethisworks";
 
-        String openWeatherKey = Backend.openweatherKey;
-        System.out.println(openWeatherKey);
+        String cleaned = Backend.cleanQuery(s);
+        System.out.println(cleaned);
+        assert cleaned.equals(goal);
+    }
+
+    @Test
+    public void cleanQuery_spaces() {
+        String s = "!£$%^ihope&*this( )works";
+        String goal = "ihopethis&20works";
+
+        String cleaned = Backend.cleanQuery(s);
+        System.out.println(cleaned);
+        assert cleaned.equals(goal);
     }
 }

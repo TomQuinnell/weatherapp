@@ -4,12 +4,13 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class Forecast {
-    private LocalDateTime timeOfQuery; // time object of when query sent
+    // Forecast is a Parent object, just having a timeOfQuery, used to check for freshness
 
+    private LocalDateTime timeOfQuery; // time object of when query sent
     private final static  int maxMinsBeforeNew = 1; // mins before new query needed
 
     public Forecast(LocalDateTime timeOfQuery) {
-        // null on start up
+        // set time of query being sent
         this.timeOfQuery = timeOfQuery;
     }
 
@@ -26,7 +27,7 @@ public class Forecast {
         this.timeOfQuery = timeOfQuery;
     }
 
-    public boolean isOld() { // RENAME ELSEWHERE BRO
+    public boolean isOld() {
         // check if past maxMinsBeforeNew minutes since last query for freshness
         return this.timeOfQuery != null && this.timeOfQuery.until(LocalDateTime.now(), ChronoUnit.MINUTES) > maxMinsBeforeNew;
     }

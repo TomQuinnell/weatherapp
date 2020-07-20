@@ -13,6 +13,9 @@ import java.util.List;
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
 public class SevenDay extends GUIForecastComposite {
+    // SevenDay is a GUIForecastComposite, which contains a series of ForecastAtTimes
+
+    // components
     private JTextPane forecastName;
     private JButton switchButton;
     private List<ForecastRow> forecasts;

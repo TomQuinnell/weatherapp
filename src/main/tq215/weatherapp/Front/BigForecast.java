@@ -1,29 +1,28 @@
 package main.tq215.weatherapp.Front;
 
 import main.tq215.weatherapp.Back.Backend;
-import main.tq215.weatherapp.utils.ForecastComposite;
 import main.tq215.weatherapp.utils.Location;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 
 public class BigForecast extends JPanel implements Updateable {
+    // BigForecast displays a snapshot of a forecast, alongside a larger composite (12 hour or 7 day) forecast
+
+    // components
     private JButton backButton;
     private BigSnapshot snapshot;
     private GUIForecastComposite composite;
-    private boolean isTwelveHour;
     private Location location;
-
     GridBagConstraints gbc = new GridBagConstraints();
 
     public BigForecast(Location location) {
         this.location = location;
 
         setLayout(new GridBagLayout());
-        this.setBackground(Color.GRAY);
+        this.setBackground(new Color(46, 134, 193));
         //gbc.weightx = 1;
         //gbc.weighty = 1;
 
@@ -47,16 +46,19 @@ public class BigForecast extends JPanel implements Updateable {
         // composite forecast
         gbc.gridx = 0;
         gbc.gridy = 2;
-        isTwelveHour = true;
         composite = new TwelveHour(this.location);
         composite.addListener(make12HAL());
         add(composite, gbc);
+
+        this.setPreferredSize(new Dimension(850, 800));
     }
 
-    public ActionListener make12HAL() {
+    private ActionListener make12HAL() {
+        // make an ActionListener to attach to the 12 hour forecast JPanel
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                // switch to SevenDay()
                 gbc.gridx = 0;
                 gbc.gridy = 2;
 
@@ -69,6 +71,7 @@ public class BigForecast extends JPanel implements Updateable {
                 revalidate();
                 repaint();
 
+                // fire off API call and update
                 Backend.get7Day(location);
                 composite.update();
                 revalidate();
@@ -77,7 +80,8 @@ public class BigForecast extends JPanel implements Updateable {
         };
     }
 
-    public ActionListener make7DAL() {
+    private ActionListener make7DAL() {
+        // make an ActionListener to attach to the 12 hour forecast JPanel
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -93,6 +97,7 @@ public class BigForecast extends JPanel implements Updateable {
                 revalidate();
                 repaint();
 
+                // fire off API call
                 Backend.get12Hour(location); // TODO make this (and 12HAL call) async
                 composite.update();
                 revalidate();
@@ -102,6 +107,7 @@ public class BigForecast extends JPanel implements Updateable {
     }
 
     public void update(Location location) {
+        // update from location
         this.location = location;
 
         snapshot.update(location);
@@ -111,6 +117,7 @@ public class BigForecast extends JPanel implements Updateable {
     }
 
     public void update() {
+        // update, as forecasts for location have been updated
         snapshot.update();
         composite.update();
         revalidate();
@@ -118,6 +125,7 @@ public class BigForecast extends JPanel implements Updateable {
     }
 
     public void setBackAL(ActionListener listener) {
+        // set back button action listener
         for (ActionListener l: this.backButton.getActionListeners()) {
             this.backButton.removeActionListener(l);
         }
@@ -125,6 +133,7 @@ public class BigForecast extends JPanel implements Updateable {
     }
 
     public void resetComposite() {
+        // remove composite, switching back to an empty 12 hour
         remove(composite);
         this.composite = new TwelveHour(this.location);
         this.composite.addListener(make12HAL());

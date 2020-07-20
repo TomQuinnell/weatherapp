@@ -1,7 +1,5 @@
 package main.tq215.weatherapp.Back;
 
-import main.tq215.weatherapp.Front.Updateable;
-import main.tq215.weatherapp.utils.Forecast;
 import main.tq215.weatherapp.utils.ForecastAtTime;
 import main.tq215.weatherapp.utils.ForecastComposite;
 import org.json.JSONObject;
@@ -10,7 +8,6 @@ import org.json.JSONArray;
 import main.tq215.weatherapp.utils.Location;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -21,12 +18,12 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.time.LocalDateTime;
 
 public class Backend {
-    public static String weatherapiKey = null;
+    // load weatherAPI.com key, located at ./Resources/ApiKeys/weatherapikey.txt
+    private static String weatherapiKey = null;
     static {
         try {
             weatherapiKey = loadKey("./Resources/ApiKeys/weatherapikey.txt");
@@ -34,11 +31,12 @@ public class Backend {
             e.printStackTrace();
         }
     }
+    // create URL and the DTF for the API's results
     private static final String weatherapiURL = "http://api.weatherapi.com/v1/";
     private static final DateTimeFormatter weatherapiDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-
-    public static String openweatherKey = null;
+    // load openweatherAPI.com key, located at ./Resources/ApiKeys/openweatherkey.txt
+    private static String openweatherKey = null;
     static {
         try {
             openweatherKey = loadKey("./Resources/ApiKeys/openweatherkey.txt");
@@ -46,11 +44,11 @@ public class Backend {
             e.printStackTrace();
         }
     }
+    // create URL for API
     private static final String openweatherURL = "https://api.openweathermap.org/data/2.5/";
 
-    private static final Random randomGenerator = new Random();
-
     private static String loadKey(String filePath) throws IOException {
+        // load key from first line of .txt file at filePath
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         String key = reader.readLine();
         reader.close();
@@ -66,21 +64,24 @@ public class Backend {
                 .build();
         System.out.println("Request built for " + uri);
 
-        // TODO ensure query correctly terminates
+        // TODO ensure query correctly terminates - analyse error codes etc.
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
     }
 
     private static LocalDateTime dtToLDT(long dt, int timezone_offset) {
+        // convert dt long (since time universal time start) to LDT object (ensuring time zone taken into account)
         return LocalDateTime.ofEpochSecond(dt, 0, ZoneOffset.ofTotalSeconds(timezone_offset));
     }
 
     private static ForecastAtTime forecast_FromLiveJSON(JSONObject liveData, int timezone_offset, boolean isSmallPic) {
+        // parse from live JSON data
+
         // double temp, double cloudCoverage, double rain, double humidity, double windSpeed
         double newTemp = (double) (Math.round(100.0 * (liveData.getDouble("temp") - 273.0)) / 100); // temp in Kelvin
         double newCloudCov = liveData.getDouble("clouds");
-        double newRain;
+        double newRain; // NOTE: rain not always available :(
         if (liveData.has("rain") && liveData.getJSONObject("rain").has("1h")) {
             newRain = liveData.getJSONObject("rain").getDouble("1h");
         } else {
@@ -97,10 +98,12 @@ public class Backend {
     }
 
     private static ForecastAtTime forecast_FromDayJSON(JSONObject dayData, int timezone_offset) {
+        // parse from day JSON data
+
         // double temp, double cloudCoverage, double rain, double humidity, double windSpeed
         double newTemp = (double) (Math.round(100.0 * (dayData.getJSONObject("temp").getDouble("max") - 273.0)) / 100); // temp in Kelvin
         double newCloudCov = dayData.getDouble("clouds");
-        double newRain; // rain not always available
+        double newRain; // rain not always available :(
         if (dayData.has("rain")) {
             newRain = dayData.getDouble("rain");
         } else {
@@ -117,6 +120,8 @@ public class Backend {
     }
 
     public static void getSnapshot(Location location) {
+        // get snapshot for location
+
         // first check for forecast existence and freshness if exists
         ForecastAtTime forecast = location.getCurrentForecast();
         if (forecast.notInitialised() || forecast.isOld()) {
@@ -147,9 +152,10 @@ public class Backend {
     }
 
     public static void get12Hour(Location location) {
-        // first check for forecast existence and freshness if exists
+        // get 12 hour forecast for location
         ForecastComposite forecast = location.getTwelveHour();
 
+        // first check for forecast existence and freshness if exists
         if (forecast.notInitialised() || forecast.isOld() || forecast.isDifferentHour()) {
             // first set location's forecast to LOADING
             location.setTwelveHour(new ForecastComposite(12));
@@ -182,9 +188,10 @@ public class Backend {
     }
 
     public static void get7Day(Location location) {
-        // first check for forecast existence and freshness if exists
+        // get 7 day forecast for location
         ForecastComposite forecast = location.getSevenDay();
 
+        // first check for forecast existence and freshness if exists
         if (forecast.notInitialised() || forecast.isOld() || forecast.isDifferentDay()) {
             // first set location's forecast to LOADING
             location.setSevenDay(new ForecastComposite(7));
@@ -216,15 +223,51 @@ public class Backend {
         }
     }
 
-    public static List<Location> getTopKSearches(String query, int k) {
-        // TODO ensure query has clean, non-API-code-injected, String
-        //  and ensure query not empty, if so return []
-        //  do both of these on the front-end on text entry
+    public static List<Location> getTopKSearches(String query, int k, LocationCache cache) {
+        // get top K searches for query
+
+        // ensure query has clean, non-API-code-injected, String
+        String cleanQuery = cleanQuery(query);
 
         // send off query to API
         // http://api.weatherapi.com/v1/search.json?key=<YOUR_API_KEY>&q=lond
-        String apiQuery = weatherapiURL + "search.json?key=" + weatherapiKey + "&q=" + query;
-        System.out.println("Sending call for search for " + query);
+        String apiQuery = weatherapiURL + "search.json?key=" + weatherapiKey + "&q=" + cleanQuery;
+        System.out.println("Sending call for search for " + cleanQuery);
+
+        CompletableFuture<String> httpCall = getAsync(apiQuery);
+        String apiResult = httpCall.join();
+        //System.out.println(apiResult);
+
+        // compile together top k results into a List
+        List<Location> topk = new ArrayList<>();
+
+        // parse JSON
+        JSONArray searchResults = new JSONArray(apiResult);
+        for (int i = 0; i < Math.min(searchResults.length(), k); i++) {
+            JSONObject loc = searchResults.getJSONObject(i);
+            double lat = loc.getDouble("lat");
+            double lon = loc.getDouble("lon");
+            String name = loc.getString("name");
+
+            // add via LocationCache, to ensure reuse if exists
+            topk.add(cache.findLocation(lat + "_" + lon, name, false));
+        }
+
+        return topk;
+    }
+
+    public static String cleanQuery(String query) {
+        // first replace all chars in '^\\w ' (not {letters U space}), then replace space with &20 (special API char for ' '
+        return query.replaceAll("[^\\w ]", "").replace(" ", "&20");
+    }
+
+    public static List<Location> getTopKSearches(String query, int k) {
+        // ensure query has clean, non-API-code-injected, String
+        String cleanQuery = cleanQuery(query);
+
+        // send off query to API
+        // http://api.weatherapi.com/v1/search.json?key=<YOUR_API_KEY>&q=lond
+        String apiQuery = weatherapiURL + "search.json?key=" + weatherapiKey + "&q=" + cleanQuery;
 
         CompletableFuture<String> httpCall = getAsync(apiQuery);
         String apiResult = httpCall.join();
@@ -239,7 +282,7 @@ public class Backend {
             double lon = loc.getDouble("lon");
             String name = loc.getString("name");
 
-            // TODO fetch from cache if exists first, then from JSON
+            // Don't add via LocationCache, to ensure reuse if exists
             topk.add(new Location(name, lat, lon));
         }
 

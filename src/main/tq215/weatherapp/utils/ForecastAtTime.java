@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class ForecastAtTime extends Forecast {
+    // ForecastAtTime is a Forecast which contains the actual weather info at a certain time
+
+    // components
     private Picture picture;
     private double temp; // in degrees C
     private double cloudCoverage; // percentage of cloud
@@ -39,17 +42,19 @@ public class ForecastAtTime extends Forecast {
     private void updatePic() {
         // TODO make pictures at night not sunny
         // update picture based on weather of forecast
-        double WARMLEVEL = 15.0;
+
+        // set levels of different weathers
+        double WARMLEVEL = 10.0;
         boolean isWarm = this.temp > WARMLEVEL;
 
-        double CLOUDYLEVEL = 50.0;
+        double CLOUDYLEVEL = 40.0;
         boolean isCloudy = this.cloudCoverage > CLOUDYLEVEL;
 
-        double RAINYLEVEL = 50.0;
+        double RAINYLEVEL = 0.0;
         boolean isRainy = this.rain > RAINYLEVEL;
 
+        // update picture based on logic of weather levels
         Picture picToUpdateTo;
-
         if (isRainy) {
             if (isWarm) {
                 if (isSmallPic) {
@@ -158,6 +163,7 @@ public class ForecastAtTime extends Forecast {
     }
 
     public void updateForecast(double temp, double cloudCoverage, double rain, double humidity, double windSpeed) {
+        // update forecast from a new set of weather infos
         this.temp = temp;
         this.cloudCoverage = cloudCoverage;
         this.rain = rain;

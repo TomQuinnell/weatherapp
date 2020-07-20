@@ -4,9 +4,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public enum Picture {
+    // an enum of Pictures found stored at ./Resources/Imgs/
     LOADING("Load.png"),
     COLD("Cold.png"),
     WARM("Warm.png"),

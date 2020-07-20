@@ -1,6 +1,5 @@
 package main.tq215.weatherapp.Front;
 
-import main.tq215.weatherapp.utils.Forecast;
 import main.tq215.weatherapp.utils.ForecastAtTime;
 import main.tq215.weatherapp.utils.Location;
 
@@ -10,8 +9,10 @@ import java.awt.*;
 import static main.tq215.weatherapp.utils.SwingStuff.makeTextPane;
 
 public class BigSnapshot extends JPanel implements Updateable {
-    private Location location;
+    // a BigSnapshot includes a snapshot for a ForecastAtTime for a Location, for use in BigForecast JPanel
 
+    // components
+    private Location location;
     private JTextPane nameBadge;
     private JLabel weatherImg;
     private JTextPane temp;
@@ -74,11 +75,13 @@ public class BigSnapshot extends JPanel implements Updateable {
     }
 
     public void update(Location location) {
+        // update from new location
         this.location = location;
         update();
     }
 
     public void update() {
+        // update snapshot info from this.location
         ForecastAtTime snapshot = this.location.getCurrentForecast();
         nameBadge.setText(this.location.getName());
         this.weatherImg.setIcon(new ImageIcon(snapshot.getPicture().getIcon()));

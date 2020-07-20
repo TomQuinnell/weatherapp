@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForecastComposite extends Forecast {
+    // ForecastComposite is a Forecast which contains a series of ForecastAtTimes
+
     private List<ForecastAtTime> forecasts;
 
     public ForecastComposite(List<Double> temp, List<Double> cloudCoverage, List<Double> rain, List<Double> humidity,
                              List<Double> windSpeed, List<LocalDateTime> timeOfForecast) {
+        // construct from a list of attributes
         super(LocalDateTime.now());
         // zip lists of forecast attributes
         this.forecasts = new ArrayList<>();
@@ -27,6 +30,7 @@ public class ForecastComposite extends Forecast {
     }
 
     public ForecastComposite(List<ForecastAtTime> forecasts) {
+        // construct from a list of Forecasts
         super(LocalDateTime.now());
         this.forecasts = forecasts;
     }

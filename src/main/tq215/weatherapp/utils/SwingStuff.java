@@ -6,6 +6,7 @@ import javax.swing.text.StyleConstants;
 
 public class SwingStuff {
     public static JTextPane makeTextPane(String text) {
+        // Function to make a JTextPane containing text
         JTextPane newPane = new JTextPane();
 
         SimpleAttributeSet attribs = new SimpleAttributeSet();

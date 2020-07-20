@@ -1,8 +1,9 @@
 package main.tq215.weatherapp.utils;
 
-import java.util.List;
-
 public class Location {
+    // Location is a real-life place, holding its name, latitude and longitude
+
+    // components
     private String name;
     private double lat;
     private double lon;
@@ -12,7 +13,7 @@ public class Location {
     private ForecastComposite sevenDay;
 
     public Location(String name, double lat, double lon) {
-        // no forecast found/needed
+        // construct from name, lat and lon. No forecasts available yet so initialise as null-ish objects
         this.name = name;
         this.lat = lat;
         this.lon = lon;

@@ -8,9 +8,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class HomePage extends JPanel {
+    // The HomePage holds snapshots for the 4 most recent locations, and the user location. It also has a search bar to
+    // find new locations
+
+    // components
     private List<Location> recents;
     private Location userLocation;
-
     private JTextField searchBar;
     private HomeSnapshot mainLocation;
     private HomeSnapshot subLocation1;
@@ -23,7 +26,7 @@ public class HomePage extends JPanel {
         this.userLocation = userLocation;
 
         setLayout(new GridBagLayout());
-        this.setBackground(Color.RED);
+        this.setBackground(new Color( 93, 173, 226 ));
         GridBagConstraints gbc = new GridBagConstraints();
 
         //gbc.weightx = 1;
@@ -37,8 +40,8 @@ public class HomePage extends JPanel {
         mainLocation = new HomeSnapshot(userLocation);
         add(mainLocation, gbc);
 
-        gbc.gridwidth = 1;
         // sub locations
+        gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 2;
         subLocation1 = new HomeSnapshot(recents.get(0));
@@ -67,9 +70,12 @@ public class HomePage extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         searchBar = new JTextField();
         add(searchBar, gbc);
+
+        this.setPreferredSize(new Dimension(700, 700));
     }
 
     public void update(List<Location> recents, Location userLocation) {
+        // update from new recents, and userLocation
         this.recents = recents;
         this.userLocation = userLocation;
 
@@ -77,13 +83,18 @@ public class HomePage extends JPanel {
     }
 
     public void update() {
+        // call update on each snapshot
         mainLocation.update(userLocation);
-        subLocation1.update(recents.get(0)); // TODO make sure updates in Main/to recents are async so no java.util.ConcurrentModificationException raised here
+        subLocation1.update(recents.get(0));
         subLocation2.update(recents.get(1));
         subLocation3.update(recents.get(2));
         subLocation4.update(recents.get(3));
         revalidate();
         repaint();
+    }
+
+    public String getSearchBarText() {
+        return this.searchBar.getText();
     }
 
     public Location getMainLocation() {
@@ -108,10 +119,16 @@ public class HomePage extends JPanel {
 
     public void addListeners(ActionListener mainListener, ActionListener sub1Listener, ActionListener sub2Listener,
                              ActionListener sub3Listener, ActionListener sub4Listener) {
+        // add expand action listeners to all snapshots
         mainLocation.addListener(mainListener);
         subLocation1.addListener(sub1Listener);
         subLocation2.addListener(sub2Listener);
         subLocation3.addListener(sub3Listener);
         subLocation4.addListener(sub4Listener);
+    }
+
+    public void addSearchBarAL(ActionListener listener) {
+        // add action listener for search bar
+        this.searchBar.addActionListener(listener);
     }
 }
